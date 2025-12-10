@@ -21,6 +21,8 @@ go get github.com/saucesteals/mimic
 package main
 
 import (
+	"io"
+
 	http "github.com/saucesteals/fhttp"
 	"github.com/saucesteals/mimic"
 )
