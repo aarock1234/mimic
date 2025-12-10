@@ -22,6 +22,7 @@ package main
 
 import (
 	"io"
+	"fmt"
 
 	http "github.com/saucesteals/fhttp"
 	"github.com/saucesteals/mimic"
