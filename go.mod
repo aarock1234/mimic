@@ -1,8 +1,11 @@
-module github.com/saucesteals/mimic
+module github.com/aarock1234/mimic
 
 go 1.24
 
 require (
+	github.com/lmittmann/tint v1.1.3
+	github.com/mattn/go-colorable v0.1.14
+	github.com/mattn/go-isatty v0.0.20
 	github.com/refraction-networking/utls v1.7.4-0.20250519154908-0557f61cb0b8
 	github.com/saucesteals/fhttp v1.0.1
 )

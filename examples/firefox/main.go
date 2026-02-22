@@ -11,18 +11,18 @@ import (
 )
 
 func main() {
-	version := "144.0.0.0"
+	version := "134.0"
 	if len(os.Args) > 1 {
 		version = os.Args[1]
 	}
 
-	spec, err := mimic.Chromium(mimic.BrandChrome, version) // or mimic.BrandBrave, mimic.BrandEdge
+	spec, err := mimic.Firefox(version)
 	if err != nil {
 		slog.Error("failed to create mimic spec", "error", err)
 		return
 	}
 
-	transport, err := mimic.NewTransport(spec, mimic.PlatformWindows, // or mimic.PlatformMac, mimic.PlatformLinux
+	transport, err := mimic.NewTransport(spec, mimic.PlatformLinux, // also supports mimic.PlatformWindows and mimic.PlatformMac
 		mimic.WithBaseTransport(&http.Transport{Proxy: http.ProxyFromEnvironment}),
 	)
 	if err != nil {
@@ -34,26 +34,18 @@ func main() {
 
 	req, _ := http.NewRequest(http.MethodGet, "https://tls.peet.ws/api/clean", nil)
 
-	req.Header.Add("rtt", "50")
-	req.Header.Add("accept", "text/html,*/*")
-	req.Header.Add("x-requested-with", "XMLHttpRequest")
-	req.Header.Add("downlink", "3.9")
-	req.Header.Add("ect", "4g")
-	req.Header.Add("sec-fetch-site", "same-origin")
-	req.Header.Add("sec-fetch-mode", "cors")
-	req.Header.Add("sec-fetch-dest", "empty")
+	req.Header.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+	req.Header.Add("accept-language", "en-US,en;q=0.5")
 	req.Header.Add("accept-encoding", "gzip, deflate, br")
-	req.Header.Add("accept-language", "en,en_US;q=0.9")
-	// mimic automatically sets: user-agent, sec-ch-ua, sec-ch-ua-mobile, sec-ch-ua-platform
-
-	// optional header order
-	// req.Header[http.HeaderOrderKey] = []string{
-	// 	"user-agent", "sec-ch-ua", "sec-ch-ua-mobile", ...
-	// }
+	req.Header.Add("sec-fetch-site", "none")
+	req.Header.Add("sec-fetch-mode", "navigate")
+	req.Header.Add("sec-fetch-dest", "document")
+	req.Header.Add("upgrade-insecure-requests", "1")
+	// mimic automatically sets: user-agent
 
 	res, err := client.Do(req)
 	if err != nil {
-		slog.Error("failed to decode peet clean response", "error", err)
+		slog.Error("failed to make request", "error", err)
 		return
 	}
 

@@ -11,12 +11,13 @@ import (
 )
 
 func main() {
-	version := "144.0.0.0"
+	version := "137.0.0.0"
 	if len(os.Args) > 1 {
 		version = os.Args[1]
 	}
 
-	spec, err := mimic.Chromium(mimic.BrandChrome, version) // or mimic.BrandBrave, mimic.BrandEdge
+	// edge uses the same chromium engine but with "Edg/{version}" in the user-agent
+	spec, err := mimic.Chromium(mimic.BrandEdge, version)
 	if err != nil {
 		slog.Error("failed to create mimic spec", "error", err)
 		return
@@ -46,14 +47,9 @@ func main() {
 	req.Header.Add("accept-language", "en,en_US;q=0.9")
 	// mimic automatically sets: user-agent, sec-ch-ua, sec-ch-ua-mobile, sec-ch-ua-platform
 
-	// optional header order
-	// req.Header[http.HeaderOrderKey] = []string{
-	// 	"user-agent", "sec-ch-ua", "sec-ch-ua-mobile", ...
-	// }
-
 	res, err := client.Do(req)
 	if err != nil {
-		slog.Error("failed to decode peet clean response", "error", err)
+		slog.Error("failed to make request", "error", err)
 		return
 	}
 
